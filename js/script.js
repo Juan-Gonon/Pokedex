@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         "generation-6",
         "generation-7",
     ];
+
+
     
 
     getAPI(genres)
@@ -97,6 +99,19 @@ function getPokemon(numero, toggle){
     const container = document.getElementById('container');
     // let Pokemon = [];
 
+        //#region Observador de img task
+        const imgOptions = {};
+        const imgObserver = new IntersectionObserver((entry, observer)=>{
+            entry.forEach((i)=>{
+                if(!i.isIntersecting) return;
+                const img = i.target;
+                let dataImage = img.getAttribute("data-image");
+                img.src = dataImage;
+                observer.unobserve();
+            })
+        }, imgOptions)
+    //#endregion
+
     container.innerHTML = '';
     
     fetchPokemon(endpoint).then((data)=>{
@@ -135,6 +150,7 @@ function getPokemon(numero, toggle){
 
             divItem.appendChild(img)
             container.appendChild(divItem)
+            imgObserver.observe(img)
         })
 
     });
