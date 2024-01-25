@@ -107,7 +107,7 @@ function getPokemon(numero, toggle){
                 const img = i.target;
                 let dataImage = img.getAttribute("data-image");
                 img.src = dataImage;
-                observer.unobserve();
+                observer.unobserve(img);
             })
         }, imgOptions)
     //#endregion
