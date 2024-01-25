@@ -8,13 +8,24 @@ document.addEventListener('DOMContentLoaded', ()=>{
         "generation-6",
         "generation-7",
     ];
+    
 
-    getAPI()
+    getAPI(genres)
    
     //'https://pokeapi.co/api/v2/'
 
+  
+    // console.log(gen)
+})
+
+function getAPI(genres){
+    let numero = 1;
+    let toggle = false;
+
 
     const filters = document.getElementById('filters');
+    const btnIcon = document.getElementById('btnicono');
+    const title = document.getElementById('title');
     let gen = '';
 
     for(let i=0; i<genres.length; i++){
@@ -25,14 +36,27 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     filters.innerHTML = gen;
 
+    getPokemon(numero)
+    btnIcon.addEventListener('click',()=>{
+        getPokemon(numero, toggle)
+    })
+
+    filters.addEventListener('click', (e)=>{
+        let target = e.target.type;
+        let valor = e.target.value;
+        // console.log(e.target.id)
+        if(target == 'radio'){
+            getPokemon(valor, toggle);
+            title.innerText = 'Pokemon ' + e.target.id;
+            
+        }
+    })
 
 
-    // console.log(gen)
-    
-})
 
-function getAPI(){
-    getPokemon(1)
+
+ 
+   
 }
 
 
@@ -68,7 +92,7 @@ function orderNumber(str){
     return mySubstring
 }
 
-function getPokemon(numero){
+function getPokemon(numero, toggle){
     let endpoint = `https://pokeapi.co/api/v2/generation/${numero}`;
     const container = document.getElementById('container');
     // let Pokemon = [];
@@ -83,13 +107,33 @@ function getPokemon(numero){
         data.sort((a,b)=> a.nr - b.nr)
 
         data.forEach((i)=>{
-            console.log(i)
+            // console.log(i)
 
+            let num3Decimales = orderNumber(i.url);
             const divItem = document.createElement('li');
+            const img = new Image();
 
+            if(num3Decimales < 10){
+                num3Decimales = "00" + num3Decimales;
+            }else if(num3Decimales < 100){
+                num3Decimales = "0" + num3Decimales;
+            }
+
+            // console.log(num3Decimales)
+            
+
+            const toggleUrl = toggle ? "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" : "https://www.serebii.net/pokemongo/pokemon/";
+
+            const urlImage = `${toggleUrl}${num3Decimales}.png`
+
+            img.setAttribute('src', 'https://i.gifer.com/origin/28/2860d2d8c3a1e402e0fc8913cd92cd7a_w200.gif');
+            img.setAttribute('data-image', urlImage);
+            img.setAttribute('class', 'pokeimage');
+            img.setAttribute('alt', i.name)
             divItem.classList.add('item');
             divItem.innerHTML = `<div> ${i.nr}-${i.name}</div> `
 
+            divItem.appendChild(img)
             container.appendChild(divItem)
         })
 
